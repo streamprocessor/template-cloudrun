@@ -35,6 +35,9 @@ const firestoreApi = new gcp.projects.Service("firestoreApi", {
     service: "firestore.googleapis.com",
 });
 
+const pubsubApi = new gcp.projects.Service("pubsubApi", {
+    service: "pubsub.googleapis.com",
+});
 
 /*
 * Bind roles to cloud bild service account
@@ -89,7 +92,11 @@ const cloudBuildAgentIamMember = gcp.organizations
 const cloudBuildAgentIamBindingCloudkmsCryptoKeyEncrypterDecrypter = new gcp.projects.IAMBinding("cloudBuildAgentIamBindingCloudkmsCryptoKeyEncrypterDecrypter", {
     members: [cloudBuildAgentIamMember],
     role: "roles/cloudkms.cryptoKeyEncrypterDecrypter",
-    project: projectId});
+    project: projectId},
+    {dependsOn:[
+        cloudBuildApi,
+        cloudKmsApi
+    ]});
 
 
 /*
@@ -174,7 +181,8 @@ const pubsubServiceAgentIamMember = gcp.organizations
 const pubsubServiceAgentIamBindingIamServiceAccountUser = new gcp.projects.IAMBinding("pubsubServiceAgentIamBindingIamServiceAccountUser", {
     members: [pubsubServiceAgentIamMember],
     role: "roles/iam.serviceAccountTokenCreator",
-    project: projectId});
+    project: projectId},
+    {dependsOn: [pubsubApi]});
 
 // kms encryption
 const streamProcessorKmsKeyRing = new gcp.kms.KeyRing("streamProcessorKmsKeyRing", {
