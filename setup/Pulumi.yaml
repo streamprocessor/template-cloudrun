@@ -1,0 +1,3 @@
+name: streamprocessor-setup
+runtime: nodejs
+description: setup streamprocessor on GCP
