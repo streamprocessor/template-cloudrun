@@ -29,19 +29,6 @@ const loaderVersion = "latest";
 ******** START BOOTSTRAP ********
 */
 
-// Enable APIs
-const enableCloudResourceManager = new gcp.projects.Service("enable-cloud-resource-manager", {
-    service: "cloudresourcemanager.googleapis.com",
-});
-
-const enableCloudFunctions = new gcp.projects.Service("enable-cloud-functions", {
-    service: "cloudfunctions.googleapis.com",
-});
-
-const enableCloudRun = new gcp.projects.Service("enable-cloud-run", {
-    service: "run.googleapis.com",
-});
-
 // Create GCP PubSub topics
 const deadLetterTopic = new gcp.pubsub.Topic("dead-letter", {
     labels: {
@@ -125,7 +112,7 @@ const collectorFunction = new gcp.cloudfunctions.Function("collector", {
         stream: "all",
         component: "collector",
     },
-}, { dependsOn: [enableCloudFunctions, collectedTopic] });
+}, { dependsOn: [collectedTopic] });
 
 const publicFunctionInvoker = new gcp.cloudfunctions.FunctionIamMember("collector-iam-public-invoker", {
     project: collectorFunction.project,
@@ -165,7 +152,7 @@ const registryService = new gcp.cloudrun.Service("registrator", {
         latestRevision: true,
         percent: 100,
     }],
-}, { dependsOn: [enableCloudRun] });
+});
 
 // Deploy serializer on cloud run. Modify max instances if needed (default 10).
 const serializerService = new gcp.cloudrun.Service("serializer", {
@@ -201,7 +188,7 @@ const serializerService = new gcp.cloudrun.Service("serializer", {
         latestRevision: true,
         percent: 100,
     }],
-}, { dependsOn: [enableCloudRun, serializedTopic, registryService] });
+}, { dependsOn: [serializedTopic, registryService] });
 
 const transformedSubscription = new gcp.pubsub.Subscription("serializer", {
     topic: transformedTopic.name,
@@ -254,7 +241,7 @@ const loaderService = new gcp.cloudrun.Service("loader", {
         latestRevision: true,
         percent: 100,
     }],
-}, { dependsOn: [enableCloudRun, serializedTopic, registryService] });
+}, { dependsOn: [serializedTopic, registryService] });
 
 
 
