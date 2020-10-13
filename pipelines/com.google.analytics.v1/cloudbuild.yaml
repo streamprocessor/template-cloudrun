@@ -8,7 +8,6 @@ steps:
        gcloud secrets versions access latest --secret=pulumi-credentials --format='get(payload.data)' | tr '_-' '/+' | base64 -d > credentials.json
        echo 'secret to json'
        cat credentials.json
-#- name: streamprocessororg/builder:latest
 - name: us-central1-docker.pkg.dev/streamprocessor-org/builder/pulumi-node:latest
   entrypoint: "bash"
   args:
@@ -19,6 +18,7 @@ steps:
        export PULUMI_CONFIG_PASSPHRASE=""
        pulumi login --cloud-url ${_STATE_BUCKET}
        pulumi stack init ${_STACK}-${_ENV} --secrets-provider="gcpkms://projects/${PROJECT_ID}/locations/global/keyRings/${_GOOGLE_KEY_RING}/cryptoKeys/${_GOOGLE_CRYPTO_KEY}"
+       #pulumi stack init ${_STACK} --secrets-provider="gcpkms://projects/${PROJECT_ID}/locations/global/keyRings/${_GOOGLE_KEY_RING}/cryptoKeys/${_GOOGLE_CRYPTO_KEY}"
        #pulumi stack change-secrets-provider "gcpkms://projects/${PROJECT_ID}/locations/global/keyRings/${_GOOGLE_KEY_RING}/cryptoKeys/${_GOOGLE_CRYPTO_KEY}"
        echo 'select stack'
        pulumi stack select ${_STACK}-${_ENV}
@@ -39,7 +39,7 @@ steps:
 tags: ['streamprocessor-builder']
 substitutions:
   _STATE_BUCKET: 'default'
-  _STACK: 'infra'
+  _STACK: 'com-google-analytics-v1'
   _ENV: 'dev'
   _GOOGLE_REGION: 'europe-west1'
   _GOOGLE_ZONE: 'europe-west1-b'

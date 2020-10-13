@@ -1,8 +1,15 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as gcp from "@pulumi/gcp";
 
-const infra = new pulumi.StackReference(`infra`);
-//const serviceAccountName = infra.getOutput("streamProcessorServiceAccountEmail");
+const env = pulumi.getStack();
+const infra = new pulumi.StackReference(`infra-${env}`);
+//const infra = new pulumi.StackReference(`infra`);
+const deadLetterTopic = infra.getOutput("deadLetterTopic");
+const transformedTopic = infra.getOutput("transformedTopic");
+const collectedTopic = infra.getOutput("collectedTopic");
+const serializedTopic = infra.getOutput("serializedTopic");
+const registryService = infra.getOutput("registryService");
+const loaderService = infra.getOutput("loaderService");
 
 const config = new pulumi.Config();
 const serviceAccountName = config.require("serviceAccountName");
@@ -52,7 +59,7 @@ const comGoogleAnalyticsV1EntityTransformerService = new gcp.cloudrun.Service("t
                 envs: [
                     {
                         name: "TOPIC",
-                        value: transformedTopic.name,
+                        value: transformedTopic["name"],
                     }
                 ],
                 image: `${artifactRegistryHostname}/streamprocessor-org/transformer/com-google-analytics-v1:${comGoogleAnalyticsV1EntityTransformerVersion}`,
@@ -72,10 +79,10 @@ const comGoogleAnalyticsV1EntityTransformerService = new gcp.cloudrun.Service("t
         latestRevision: true,
         percent: 100,
     }],
-}, { dependsOn: [enableCloudRun, transformedTopic] });
+}, { dependsOn: [transformedTopic] });
 
 const comGoogleAnalyticsV1EntityCollectedSubscription = new gcp.pubsub.Subscription("com-google-analytics-v1-entity-transformer", {
-    topic: collectedTopic.name,
+    topic: collectedTopic["name"],
     ackDeadlineSeconds: 20,
     filter: "hasPrefix(attributes.subject, \"com.google.analytics.v1\")",
     labels: {
@@ -92,7 +99,7 @@ const comGoogleAnalyticsV1EntityCollectedSubscription = new gcp.pubsub.Subscript
         }
     },
     deadLetterPolicy: {
-        deadLetterTopic: deadLetterTopic.id
+        deadLetterTopic: deadLetterTopic["id"]
     }
 }, { dependsOn: [comGoogleAnalyticsV1EntityTransformerService, deadLetterTopic] });
 
@@ -107,7 +114,7 @@ const comGoogleAnalyticsV1EntityDataset = new gcp.bigquery.Dataset("dataset-com-
     },
 });  
 
-const robertSahlinComSchema = registryService.status.url.apply(s => {
+const robertSahlinComSchema = registryService["status"]["url"].apply(s => {
     return pulumi.output(getServiceResponse(s+'/subjects/com.google.analytics.v1.transformed.robertsahlin_com.Entity/versions/latest/bigqueryschema' , null));
 });
 
@@ -125,12 +132,12 @@ const robertsahlinComTable = new gcp.bigquery.Table("table-robertsahlin-com", {
     schema: robertSahlinComSchema
 }, { dependsOn: registryService });
 
-const robertSahlinComSerializedSubscriptionEndpoint = pulumi.all([loaderService.status.url, robertsahlinComTable]).apply(([url, table]) => {
+const robertSahlinComSerializedSubscriptionEndpoint = pulumi.all([loaderService["status"]["url"], robertsahlinComTable]).apply(([url, table]) => {
     return pulumi.output(pulumi.interpolate`${url}/project/${project}/dataset/${table.datasetId}/table/${table.tableId}`);
 });
 
 const robertSahlinComSerializedSubscription = new gcp.pubsub.Subscription("robertsahlin-com-entity-loader", {
-    topic: serializedTopic.name,
+    topic: serializedTopic["name"],
     ackDeadlineSeconds: 20,
     filter: "attributes.subject=\"com.google.analytics.v1.transformed.robertsahlin_com.Entity\"",
     labels: {
@@ -147,7 +154,7 @@ const robertSahlinComSerializedSubscription = new gcp.pubsub.Subscription("rober
         }
     },
     deadLetterPolicy: {
-        deadLetterTopic: deadLetterTopic.id
+        deadLetterTopic: deadLetterTopic["id"]
     }
 }, { dependsOn: [loaderService, serializedTopic, deadLetterTopic, robertsahlinComTable] });
 
