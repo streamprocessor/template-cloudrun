@@ -5,6 +5,8 @@ const config = new pulumi.Config();
 const gcpConfig = new pulumi.Config("gcp");
 const projectId = gcpConfig.require("project");
 
+const appEngineLocation = "europe-west3";
+
 /*
 * Create a GCP Storage Bucket and export the DNS name
 */
@@ -17,6 +19,10 @@ export const stateBucketName = stateBucket.url;
 */
 const secretManagerApi = new gcp.projects.Service("secretManagerApi", {
     service: "secretmanager.googleapis.com",
+});
+
+const appengineApi = new gcp.projects.Service("appengineApi", {
+    service: "appengine.googleapis.com",
 });
 
 const cloudBuildApi = new gcp.projects.Service("cloudBuildApi", {
@@ -63,6 +69,9 @@ const pubsubServiceAgentIamMember = gcp.organizations
     .getProject({projectId: projectId})
     .then(projectResult => {return "serviceAccount:service-"+ projectResult.number + "@gcp-sa-pubsub.iam.gserviceaccount.com"});
 
+const computeEngineIamMember = gcp.organizations
+    .getProject({projectId: projectId})
+    .then(projectResult => {return "serviceAccount:"+ projectResult.number + "-compute@developer.gserviceaccount.com"});
 
 const streamProcessorServiceAccount = new gcp.serviceaccount.Account("streamProcessorServiceAccount",{
     accountId: "streamprocessor",
@@ -140,7 +149,8 @@ const projectIamBindingCloudkmsCryptoKeyEncrypterDecrypter = new gcp.projects.IA
         project: projectId,
         members: [
             cloudBuildIamMember, 
-            cloudBuildAgentIamMember
+            cloudBuildAgentIamMember,
+            pulumi.interpolate`serviceAccount:${streamProcessorServiceAccountEmail}`
         ]
     },
     {
@@ -201,6 +211,18 @@ const projectIamBindingBigqueryDataEditor = new gcp.projects.IAMBinding(
         role: "roles/bigquery.dataEditor",
         project: projectId,
         members: [
+            pulumi.interpolate`serviceAccount:${streamProcessorServiceAccountEmail}`
+        ]
+    }
+);
+
+const projectIamBindingDatastoreUser = new gcp.projects.IAMBinding(
+    "projectIamBindingDatastoreUser", 
+    {
+        role: "roles/datastore.user",
+        project: projectId,
+        members: [
+            computeEngineIamMember,
             pulumi.interpolate`serviceAccount:${streamProcessorServiceAccountEmail}`
         ]
     }
@@ -292,3 +314,12 @@ const streamProcessorKmsCryptoKey = new gcp.kms.CryptoKey(
         ]
     }
 );
+
+// enable firestore
+/*
+export const firestoreAppengine = new gcp.appengine.Application(
+    "firestoreAppengine", 
+    {
+        locationId: appEngineLocation,
+        databaseType: "CLOUD_FIRESTORE",
+    });*/

@@ -1,8 +1,11 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as gcp from "@pulumi/gcp";
+import * as fs from 'fs';
+import {GoogleAuth} from 'google-auth-library';
+import {URL} from 'url';
 
-const env = pulumi.getStack();
-const infra = new pulumi.StackReference(`infra-${env}`);
+const env = pulumi.getStack().split(".").pop();
+const infra = new pulumi.StackReference(`infra.${env}`);
 //const infra = new pulumi.StackReference(`infra`);
 const deadLetterTopic = infra.getOutput("deadLetterTopic");
 const transformedTopic = infra.getOutput("transformedTopic");
@@ -22,16 +25,16 @@ const project = gcpConfig.require("project");
 const artifactRegistryHostname = `${region}-docker.pkg.dev`;
 
 function getServiceResponse(
-    url = '',
-    targetAudience = null
+    url: any = null,
+    targetAudience: any = null
   ) {
-    const {GoogleAuth} = require('google-auth-library');
+    //const {GoogleAuth} = require('google-auth-library');
     const auth = new GoogleAuth();
   
     async function request() {
       if (!targetAudience) {
         // Use the request URL hostname as the target audience for requests.
-        const {URL} = require('url');
+        //const {URL} = require('url');
         targetAudience = new URL(url).origin;
       }
       console.info(`request ${url} with target audience ${targetAudience}`);
@@ -46,9 +49,49 @@ function getServiceResponse(
     });
 }
 
+function postSchemasToRegistry(
+    url: any = null,
+    targetAudience: any = null,
+    folder='/schemas'
+){
+    const auth = new GoogleAuth();
+    if (!targetAudience) {
+        // Use the request URL hostname as the target audience for requests.
+        //const {URL} = require('url');
+        targetAudience = new URL(url).origin;
+      }
+    fs.readdir(__dirname + folder, function (err, files) {
+        if (err) {
+        console.error("Could not list the directory.", err);
+        process.exit(1);
+        }
+    
+        files.forEach(async function (file, index) {
+            console.info(__dirname + folder + '/' + file);
+            const avroString = fs.readFileSync(__dirname + folder + '/' + file, "utf8");
+            //console.log(avroString);
+            console.info(`request ${url} with target audience ${targetAudience}`);
+            const client = await auth.getIdTokenClient(targetAudience);
+            const res = await client.request({
+                url: url,
+                method: 'POST',
+                body: avroString
+            });
+        });
+    });
+}
+
 /*
 ******** START com.google.analytics.v1 ********
 */
+
+
+registryService["status"]["url"].apply(s => {
+    console.log(s);
+    postSchemasToRegistry(s+'/subjects/versions' , null, '/schemas');
+});
+
+
 const comGoogleAnalyticsV1EntityTransformerVersion = "latest";
 const comGoogleAnalyticsV1EntityTransformerService = new gcp.cloudrun.Service("transformer-com-google-analytics-v1-entity", {
     location: `${region}`,
@@ -79,7 +122,7 @@ const comGoogleAnalyticsV1EntityTransformerService = new gcp.cloudrun.Service("t
         latestRevision: true,
         percent: 100,
     }],
-}, { dependsOn: [transformedTopic] });
+});
 
 const comGoogleAnalyticsV1EntityCollectedSubscription = new gcp.pubsub.Subscription("com-google-analytics-v1-entity-transformer", {
     topic: collectedTopic["name"],
@@ -101,7 +144,7 @@ const comGoogleAnalyticsV1EntityCollectedSubscription = new gcp.pubsub.Subscript
     deadLetterPolicy: {
         deadLetterTopic: deadLetterTopic["id"]
     }
-}, { dependsOn: [comGoogleAnalyticsV1EntityTransformerService, deadLetterTopic] });
+}, { dependsOn: [comGoogleAnalyticsV1EntityTransformerService] });
 
 const comGoogleAnalyticsV1EntityDataset = new gcp.bigquery.Dataset("dataset-com-google-analytics-v1-entity", {
     datasetId: "com_google_analytics_v1",
@@ -130,7 +173,7 @@ const robertsahlinComTable = new gcp.bigquery.Table("table-robertsahlin-com", {
         component: "loader",
     },
     schema: robertSahlinComSchema
-}, { dependsOn: registryService });
+});
 
 const robertSahlinComSerializedSubscriptionEndpoint = pulumi.all([loaderService["status"]["url"], robertsahlinComTable]).apply(([url, table]) => {
     return pulumi.output(pulumi.interpolate`${url}/project/${project}/dataset/${table.datasetId}/table/${table.tableId}`);
@@ -156,7 +199,7 @@ const robertSahlinComSerializedSubscription = new gcp.pubsub.Subscription("rober
     deadLetterPolicy: {
         deadLetterTopic: deadLetterTopic["id"]
     }
-}, { dependsOn: [loaderService, serializedTopic, deadLetterTopic, robertsahlinComTable] });
+}, { dependsOn: [robertsahlinComTable] });
 
 const comGoogleAnalyticsV1EntityTransformerInvoker = new gcp.cloudrun.IamMember("invoker-com-google-analytics-v1-entity-transformer", {
     location: comGoogleAnalyticsV1EntityTransformerService.location,

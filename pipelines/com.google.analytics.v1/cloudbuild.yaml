@@ -17,11 +17,11 @@ steps:
        export GOOGLE_APPLICATION_CREDENTIALS=credentials.json
        export PULUMI_CONFIG_PASSPHRASE=""
        pulumi login --cloud-url ${_STATE_BUCKET}
-       pulumi stack init ${_STACK}-${_ENV} --secrets-provider="gcpkms://projects/${PROJECT_ID}/locations/global/keyRings/${_GOOGLE_KEY_RING}/cryptoKeys/${_GOOGLE_CRYPTO_KEY}"
+       pulumi stack init ${_STACK}.${_ENV} --secrets-provider="gcpkms://projects/${PROJECT_ID}/locations/global/keyRings/${_GOOGLE_KEY_RING}/cryptoKeys/${_GOOGLE_CRYPTO_KEY}"
        #pulumi stack init ${_STACK} --secrets-provider="gcpkms://projects/${PROJECT_ID}/locations/global/keyRings/${_GOOGLE_KEY_RING}/cryptoKeys/${_GOOGLE_CRYPTO_KEY}"
        #pulumi stack change-secrets-provider "gcpkms://projects/${PROJECT_ID}/locations/global/keyRings/${_GOOGLE_KEY_RING}/cryptoKeys/${_GOOGLE_CRYPTO_KEY}"
        echo 'select stack'
-       pulumi stack select ${_STACK}-${_ENV}
+       pulumi stack select ${_STACK}.${_ENV}
        pulumi stack ls
        npm install
        echo 'ok'
