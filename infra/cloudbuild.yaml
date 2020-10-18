@@ -45,4 +45,5 @@ substitutions:
   _GOOGLE_ZONE: 'europe-west1-b'
   _GOOGLE_KEY_RING: 'streamprocessor'
   _GOOGLE_CRYPTO_KEY: 'pulumi'
-  _SERVICE_ACCOUNT_NAME: 'default'
+#  _SERVICE_ACCOUNT_NAME: 'default'
+_SERVICE_ACCOUNT_NAME: streamprocessor@${PROJECT_ID}-setup.iam.gserviceaccount.com
