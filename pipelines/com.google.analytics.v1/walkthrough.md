@@ -9,6 +9,7 @@ Steps:
 
 1. Project and Billing
 2. Custom schema
+3. Modify infrastructure program
 
 ---
 
@@ -24,15 +25,18 @@ In order to run this guide you need a valid GCP project with billing enabled (us
 
 ## 2. Custom schema
 
-com.google.analytics.v1 enable you to create schemas with unlimited (10 000) custom dimensions and metrics as separate fields instead of arrays. Also, you can set permissions on column level using data catalog policy tags. Create an avro schema file (ex. mysite.com.avsc) by copying the template file (com.google.analytics.v1)
+StreamProcessor let you to create schemas with unlimited (10 000) custom dimensions and metrics as separate fields instead of arrays.
+
+Create an avro schema file (ex. mysite.com.avsc) by copying the template file (ua-xxxxx-y.avsc) to a filename with your propertyId.
 
 ```bash
-cp com.google.analytics.v1.avsc mysite.com.avsc
+cp ua-xxxxx-y.avsc ua-12345-1.avsc
 ```
-open your new avro schema file and delete or modify the example custom dimension and metric or add more. Remember that schema evolution only supports adding fields, not deleting them (limitation in BigQuery).
+Open your new avro schema file and delete or modify the example custom dimensions and metrics (hit and product level) or add more. Remember that due to BigQuery limnitations, schema evolution only supports adding fields, not deleting them.
 
-## 3. Modify infrastructure code
+## 3. Modify infrastructure program
 
+<walkthrough-editor-select-line filePath="template-cloudrun/pipelines/com.google.analytics.v1/index.ts" startLine="33" startCharacterOffset="1" endLine="34" endCharacterOffset="1">Open index.ts</walkthrough-editor-select-line>
 
 
 

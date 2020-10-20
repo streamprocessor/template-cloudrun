@@ -184,7 +184,7 @@
   },
   {
     "name" : "Browser",
-    "namespace" : "com.google.analytics.v1.raw.device",
+    "namespace" : "com.google.analytics.v1.transformed.device",
     "type" : "record", 
     "fields" : [
       {
@@ -218,7 +218,7 @@
   },
   {
     "name" : "Device", 
-    "namespace" : "com.google.analytics.v1.raw",
+    "namespace" : "com.google.analytics.v1.transformed",
     "type" : "record", 
     "fields" : [
       {
@@ -228,7 +228,7 @@
       },
       {
         "name" : "browser", 
-        "type" : ["null","com.google.analytics.v1.raw.device.Browser"],
+        "type" : ["null","com.google.analytics.v1.transformed.device.Browser"],
         "default" : null
       },
       {
@@ -670,12 +670,13 @@
   },
   {
     "name": "Entity",
-    "namespace": "com.google.analytics.v1.transformed",
+    "namespace": "com.google.analytics.v1.transformed.ua-xxxxx-y",
     "type": "record",
     "fields": [
       {
         "name" : "timestamp", 
-        "type" : "string"
+        "type" : "string",
+        "bigQueryType":"TIMESTAMP"
       },
       {
         "name" : "version", 
@@ -708,7 +709,7 @@
       },
       {
         "name" : "device", 
-        "type" : ["null","com.google.analytics.v1.raw.Device"],
+        "type" : ["null","com.google.analytics.v1.transformed.Device"],
         "default" : null
       },
       {
