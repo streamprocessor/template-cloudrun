@@ -1,0 +1,5 @@
+encryptionsalt: v1:i8rYHx6m3BU=:v1:hLaS1brSPu0oXbam:K3XPdOsXVUhK0rx/Dgbf30F8bq7+JQ==
+config:
+  gcp:project: streamprocessor-template
+  gcp:region: europe-west1
+  gcp:zone: europe-west1-b
