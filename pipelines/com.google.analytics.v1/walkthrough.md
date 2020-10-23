@@ -28,10 +28,10 @@ In order to run this guide you need a valid GCP project with billing enabled (us
 
 StreamProcessor let you to create schemas with unlimited (10 000) custom dimensions and metrics as separate fields instead of arrays.
 
-Create an avro schema file by copying the template file (ua-xxxxx-y.avsc) to a filename with your propertyId.
+Create an avro schema file by copying the template file (ua-xxxxx-y.avsc_) to an avro schema file (.avsc) with your propertyId as filename (ex. ua-12345-1.avsc).
 
 ```bash
-cp ua-xxxxx-y.avsc ua-12345-1.avsc
+cp ua-xxxxx-y.avsc_ ua-12345-1.avsc
 ```
 Open your new avro schema file (<walkthrough-cloud-shell-editor-icon></walkthrough-cloud-shell-editor-icon>) and delete or modify the example custom dimensions and metrics (exist on hit and product level) or add more. Remember that due to BigQuery limnitations, schema evolution only supports adding fields, not deleting them. 
 - *Alias* referes to the parameter containing the custom dimension/metric.
