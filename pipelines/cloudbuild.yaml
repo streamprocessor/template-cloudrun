@@ -1,6 +1,5 @@
 # gcloud builds submit --config=cloudbuild.yaml .
-# gcloud builds submit --config=cloudbuild.yaml . --substitutions=_STATE_BUCKET=gs://streamprocessor-setup-state-1835de9,_SERVICE_ACCOUNT_NAME=streamprocessor@streamprocessor-setup.iam.gserviceaccount.com
-# gcloud builds submit --config=cloudbuild.yaml ./com.google.analytics.v1 --substitutions=_STACK=com-google-analytics-v1.dev
+# gcloud builds submit --config=cloudbuild.yaml ./com.google.analytics.v1 --substitutions=_STACK=com-google-analytics-v1
 steps:
 - name: gcr.io/cloud-builders/gcloud
   entrypoint: 'bash'
@@ -8,8 +7,6 @@ steps:
     - '-c'
     - |
        gcloud secrets versions access latest --secret=pulumi-credentials --format='get(payload.data)' | tr '_-' '/+' | base64 -d > credentials.json
-       echo 'secret to json'
-       cat credentials.json
 - name: us-central1-docker.pkg.dev/streamprocessor-org/builder/pulumi-node:latest
   entrypoint: "bash"
   args:
@@ -21,7 +18,7 @@ steps:
        pulumi login --cloud-url ${_STATE_BUCKET}
        pulumi stack init ${_STACK} --secrets-provider="gcpkms://projects/${PROJECT_ID}/locations/global/keyRings/${_GOOGLE_KEY_RING}/cryptoKeys/${_GOOGLE_CRYPTO_KEY}"
        pulumi stack select ${_STACK}
-       pulumi stack ls
+       #pulumi stack ls
        npm install
        pulumi config set gcp:project ${PROJECT_ID} --non-interactive 
        pulumi config set gcp:region ${_GOOGLE_REGION} --non-interactive 
@@ -31,18 +28,15 @@ steps:
        pulumi stack export | pulumi stack import
        pulumi refresh --yes
        pulumi up --yes
-       pulumi stack graph tmp.gv
+       #pulumi stack graph tmp.gv
        #cat tmp.gv
        pulumi stack output --json
 tags: ['streamprocessor-builder']
 substitutions:
-#  _STATE_BUCKET: 'default'
   _STATE_BUCKET: gs://${PROJECT_ID}-state
-#  _STACK: 'com-google-analytics-v1.dev'
-  _STACK: 'default.dev'
+  _STACK: 'default'
   _GOOGLE_REGION: 'europe-west1'
   _GOOGLE_ZONE: 'europe-west1-b'
   _GOOGLE_KEY_RING: 'streamprocessor'
   _GOOGLE_CRYPTO_KEY: 'pulumi'
-#  _SERVICE_ACCOUNT_NAME: 'default'
   _SERVICE_ACCOUNT_NAME: streamprocessor@${PROJECT_ID}-setup.iam.gserviceaccount.com

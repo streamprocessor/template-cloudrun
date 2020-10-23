@@ -2,5 +2,11 @@
 Starter template for StreamProcessor
 
 Set up your StreamProcessor project:
+[![Open GCP cloud shell](http://gstatic.com/cloudssh/images/open-btn.png)](https://shell.cloud.google.com)
 
-[![StreamProcessor setup walkthrough](http://gstatic.com/cloudssh/images/open-btn.png)](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/streamprocessor/template-cloudrun&page=editor&tutorial=walkthrough.md)
+Clone the template repository and launch the walkthrough.
+
+```bash
+git clone https://github.com/streamprocessor/template-cloudrun
+cloudshell launch-tutorial ./template-cloudrun/walkthrough.md
+```

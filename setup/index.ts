@@ -10,48 +10,80 @@ const appEngineLocation = "europe-west3";
 /*
 * Create a GCP Storage Bucket and export the DNS name
 */
-const stateBucket = new gcp.storage.Bucket(projectId + "-state");
+const stateBucket = new gcp.storage.Bucket(
+    projectId + "-state",
+    {
+        name: projectId + "-state"
+    }
+);
 export const stateBucketName = stateBucket.url;
 
 
 /*
 * Enable API:s
 */
-const secretManagerApi = new gcp.projects.Service("secretManagerApi", {
-    service: "secretmanager.googleapis.com",
-});
+const secretManagerApi = new gcp.projects.Service(
+    "secretManagerApi", 
+    {
+        service: "secretmanager.googleapis.com"
+    }
+);
 
-const appengineApi = new gcp.projects.Service("appengineApi", {
-    service: "appengine.googleapis.com",
-});
+const appengineApi = new gcp.projects.Service(
+    "appengineApi", 
+    {
+        service: "appengine.googleapis.com"
+    }
+);
 
-const cloudBuildApi = new gcp.projects.Service("cloudBuildApi", {
-    service: "cloudbuild.googleapis.com",
-});
+const cloudBuildApi = new gcp.projects.Service(
+    "cloudBuildApi", 
+    {
+        service: "cloudbuild.googleapis.com"
+    }
+);
 
-const cloudRunApi = new gcp.projects.Service("cloudRunApi", {
-    service: "run.googleapis.com",
-});
+const cloudRunApi = new gcp.projects.Service(
+    "cloudRunApi",
+    {
+        service: "run.googleapis.com"
+    }
+);
 
-const cloudfunctionsApi = new gcp.projects.Service("cloudfunctionsApi", {
-    service: "cloudfunctions.googleapis.com",
-});
+const cloudfunctionsApi = new gcp.projects.Service(
+    "cloudfunctionsApi", 
+    {
+        service: "cloudfunctions.googleapis.com"
+    }
+);
 
-const cloudKmsApi = new gcp.projects.Service("cloudKmsApi", {
-    service: "cloudkms.googleapis.com",
-});
+const cloudKmsApi = new gcp.projects.Service(
+    "cloudKmsApi", 
+    {
+        service: "cloudkms.googleapis.com"
+    }
+);
 
-const firestoreApi = new gcp.projects.Service("firestoreApi", {
-    service: "firestore.googleapis.com",
-});
+const firestoreApi = new gcp.projects.Service(
+    "firestoreApi", 
+    {
+        service: "firestore.googleapis.com"
+    }
+);
 
-const pubsubApi = new gcp.projects.Service("pubsubApi", {
-    service: "pubsub.googleapis.com",
-});
+const pubsubApi = new gcp.projects.Service(
+    "pubsubApi", 
+    {
+        service: "pubsub.googleapis.com"
+    }
+);
 
-const enableCloudResourceManager = new gcp.projects.Service("enable-cloud-resource-manager", {
-    service: "cloudresourcemanager.googleapis.com",
-});
+const enableCloudResourceManager = new gcp.projects.Service(
+    "enable-cloud-resource-manager", 
+    {
+        service: "cloudresourcemanager.googleapis.com"
+    }
+);
 
 /*
 * Iam members
@@ -73,11 +105,14 @@ const computeEngineIamMember = gcp.organizations
     .getProject({projectId: projectId})
     .then(projectResult => {return "serviceAccount:"+ projectResult.number + "-compute@developer.gserviceaccount.com"});
 
-const streamProcessorServiceAccount = new gcp.serviceaccount.Account("streamProcessorServiceAccount",{
-    accountId: "streamprocessor",
-    description:"The service account used by StreamProcessor services",
-    displayName:"StreamProcessor service account"});
-    
+const streamProcessorServiceAccount = new gcp.serviceaccount.Account(
+    "streamProcessorServiceAccount",
+    {
+        accountId: "streamprocessor",
+        description:"The service account used by StreamProcessor services",
+        displayName:"StreamProcessor service account"
+    }
+);
 export const streamProcessorServiceAccountEmail = streamProcessorServiceAccount.email;
 
 /*
@@ -93,6 +128,11 @@ const projectIamBindingEditor = new gcp.projects.IAMBinding(
         members: [
             cloudBuildIamMember
         ]
+    },
+    {
+        dependsOn: [
+            cloudBuildApi
+        ]
     }
 );
 
@@ -104,6 +144,11 @@ const projectIamBindingDataflowAdmin = new gcp.projects.IAMBinding(
         members: [
             cloudBuildIamMember
         ]
+    },
+    {
+        dependsOn: [
+            cloudBuildApi
+        ]
     }
 );
 
@@ -114,6 +159,11 @@ const projectIamBindingCloudFunctionsDeveloper = new gcp.projects.IAMBinding(
         project: projectId,
         members: [
             cloudBuildIamMember
+        ]
+    },
+    {
+        dependsOn: [
+            cloudBuildApi
         ]
     }
 );
@@ -127,6 +177,11 @@ const projectIamBindingRunAdmin = new gcp.projects.IAMBinding(
             cloudBuildIamMember, 
             pulumi.interpolate`serviceAccount:${streamProcessorServiceAccountEmail}`
         ]
+    },
+    {
+        dependsOn: [
+            cloudBuildApi
+        ]
     }
 );
 
@@ -138,6 +193,11 @@ const projectIamBindingIamServiceAccountUser = new gcp.projects.IAMBinding(
         members: [
             cloudBuildIamMember,
             pulumi.interpolate`serviceAccount:${streamProcessorServiceAccountEmail}`
+        ]
+    },
+    {
+        dependsOn: [
+            cloudBuildApi
         ]
     }
 );
@@ -168,6 +228,11 @@ const projectIamBindingSecretmanagerSecretAccessor = new gcp.projects.IAMBinding
         project: projectId,
         members: [
             cloudBuildIamMember
+        ]
+    },
+    {
+        dependsOn: [
+            cloudBuildApi
         ]
     }
 );
@@ -224,6 +289,11 @@ const projectIamBindingDatastoreUser = new gcp.projects.IAMBinding(
         members: [
             computeEngineIamMember,
             pulumi.interpolate`serviceAccount:${streamProcessorServiceAccountEmail}`
+        ]
+    },
+    {
+        dependsOn: [
+            cloudRunApi
         ]
     }
 );
@@ -314,12 +384,3 @@ const streamProcessorKmsCryptoKey = new gcp.kms.CryptoKey(
         ]
     }
 );
-
-// enable firestore
-/*
-export const firestoreAppengine = new gcp.appengine.Application(
-    "firestoreAppengine", 
-    {
-        locationId: appEngineLocation,
-        databaseType: "CLOUD_FIRESTORE",
-    });*/
