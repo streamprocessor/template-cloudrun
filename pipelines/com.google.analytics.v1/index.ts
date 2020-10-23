@@ -4,16 +4,6 @@ import * as fs from 'fs';
 import {GoogleAuth} from 'google-auth-library';
 import {URL} from 'url';
 
-const env = pulumi.getStack().split(".").pop();
-const infra = new pulumi.StackReference(`infra.${env}`);
-
-const deadLetterTopic = infra.getOutput("deadLetterTopic");
-const transformedTopic = infra.getOutput("transformedTopic");
-const collectedTopic = infra.getOutput("collectedTopic");
-const serializedTopic = infra.getOutput("serializedTopic");
-const registryService = infra.getOutput("registryService");
-const loaderService = infra.getOutput("loaderService");
-
 const config = new pulumi.Config();
 const serviceAccountName = config.require("serviceAccountName");
 
@@ -21,6 +11,14 @@ const gcpConfig = new pulumi.Config("gcp");
 const region = gcpConfig.require("region");
 const zone = gcpConfig.require("zone");
 const project = gcpConfig.require("project");
+
+const infra = new pulumi.StackReference("infra");
+const deadLetterTopic = infra.getOutput("deadLetterTopic");
+const transformedTopic = infra.getOutput("transformedTopic");
+const collectedTopic = infra.getOutput("collectedTopic");
+const serializedTopic = infra.getOutput("serializedTopic");
+const registryService = infra.getOutput("registryService");
+const loaderService = infra.getOutput("loaderService");
 
 const artifactRegistryHostname = `${region}-docker.pkg.dev`;
 

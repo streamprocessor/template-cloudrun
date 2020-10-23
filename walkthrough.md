@@ -48,9 +48,12 @@ Rename the "template-cloudrun" folder (if you want to) and cd into the setup fol
 Install dependencies required (npm) and install Pulumi (a modern infrastructure as code SDK).
 
 ```bash
-cd setup
+gcloud config set project {{project-id}}
+mv ~/template-cloudrun ~/streamprocessor
+cd ~/streamprocessor/setup
 npm install
 curl -fsSL https://get.pulumi.com | sh
+
 ```
 ### 3.3 Configure Variables
 Replace variables with your own preferences (project and location). Then run the pulumi program and create a new stack. You can leave passphrase empty if you want to, the stack is only saved locally.
@@ -59,6 +62,7 @@ Replace variables with your own preferences (project and location). Then run the
 pulumi config set gcp:project {{project-id}}
 pulumi config set gcp:region europe-west1
 pulumi config set gcp:zone europe-west1-b
+pulumi stack init {{projectid}}-setup
 pulumi up
 ```
 

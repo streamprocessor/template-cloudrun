@@ -1,4 +1,4 @@
-# gcloud builds submit --config=cloudbuild.yaml . --substitutions=_STATE_BUCKET=gs://streamprocessor-setup-state-1835de9,_SERVICE_ACCOUNT_NAME=streamprocessor@streamprocessor-setup.iam.gserviceaccount.com
+# gcloud builds submit --config=cloudbuild.yaml .
 steps:
 - name: gcr.io/cloud-builders/gcloud
   entrypoint: 'bash'
@@ -6,9 +6,6 @@ steps:
     - '-c'
     - |
        gcloud secrets versions access latest --secret=pulumi-credentials --format='get(payload.data)' | tr '_-' '/+' | base64 -d > credentials.json
-       echo 'secret to json'
-       cat credentials.json
-#- name: streamprocessororg/builder:latest
 - name: us-central1-docker.pkg.dev/streamprocessor-org/builder/pulumi-node:latest
   entrypoint: "bash"
   args:
@@ -18,13 +15,10 @@ steps:
        export GOOGLE_APPLICATION_CREDENTIALS=credentials.json
        export PULUMI_CONFIG_PASSPHRASE=""
        pulumi login --cloud-url ${_STATE_BUCKET}
-       pulumi stack init ${_STACK}.${_ENV} --secrets-provider="gcpkms://projects/${PROJECT_ID}/locations/global/keyRings/${_GOOGLE_KEY_RING}/cryptoKeys/${_GOOGLE_CRYPTO_KEY}"
-       #pulumi stack change-secrets-provider "gcpkms://projects/${PROJECT_ID}/locations/global/keyRings/${_GOOGLE_KEY_RING}/cryptoKeys/${_GOOGLE_CRYPTO_KEY}"
-       echo 'select stack'
-       pulumi stack select ${_STACK}.${_ENV}
-       pulumi stack ls
+       pulumi stack init ${_STACK} --secrets-provider="gcpkms://projects/${PROJECT_ID}/locations/global/keyRings/${_GOOGLE_KEY_RING}/cryptoKeys/${_GOOGLE_CRYPTO_KEY}"
+       pulumi stack select ${_STACK}
+       #pulumi stack ls
        npm install
-       echo 'ok'
        pulumi config set gcp:project ${PROJECT_ID} --non-interactive 
        pulumi config set gcp:region ${_GOOGLE_REGION} --non-interactive 
        pulumi config set gcp:zone ${_GOOGLE_ZONE} --non-interactive 
@@ -33,17 +27,15 @@ steps:
        pulumi stack export | pulumi stack import
        pulumi refresh --yes
        pulumi up --yes
-       pulumi stack graph tmp.gv
-       cat tmp.gv
+       #pulumi stack graph tmp.gv
+       #cat tmp.gv
        pulumi stack output --json
 tags: ['streamprocessor-builder']
 substitutions:
-  _STATE_BUCKET: 'default'
+  _STATE_BUCKET: gs://${PROJECT_ID}-state
   _STACK: 'infra'
-  _ENV: 'dev'
   _GOOGLE_REGION: 'europe-west1'
   _GOOGLE_ZONE: 'europe-west1-b'
   _GOOGLE_KEY_RING: 'streamprocessor'
   _GOOGLE_CRYPTO_KEY: 'pulumi'
-#  _SERVICE_ACCOUNT_NAME: 'default'
-_SERVICE_ACCOUNT_NAME: streamprocessor@${PROJECT_ID}-setup.iam.gserviceaccount.com
+  _SERVICE_ACCOUNT_NAME: streamprocessor@${PROJECT_ID}-setup.iam.gserviceaccount.com
