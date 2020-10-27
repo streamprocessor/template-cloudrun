@@ -73,15 +73,16 @@ function postSchemasToRegistry(
         }
     
         files.forEach(async function (file, index) {
-            //console.info(__dirname + folder + '/' + file);
-            const avroString = fs.readFileSync(__dirname + folder + '/' + file, "utf8");
-            console.info(`request ${url} with target audience ${targetAudience}`);
-            const client = await auth.getIdTokenClient(targetAudience);
-            const res = await client.request({
-                url: url,
-                method: 'POST',
-                body: avroString
-            });
+            if(file.endsWith('.avsc')){
+                const avroString = fs.readFileSync(__dirname + folder + '/' + file, "utf8");
+                console.info(`request ${url} with target audience ${targetAudience}`);
+                const client = await auth.getIdTokenClient(targetAudience);
+                const res = await client.request({
+                    url: url,
+                    method: 'POST',
+                    body: avroString
+                });
+            }
         });
     });
 }
