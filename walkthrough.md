@@ -28,7 +28,9 @@ In order to run this guide you need a valid GCP project with billing enabled.
 ---
 [Create a project](https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project)
 
-[Enable billing for your project](https://cloud.google.com/billing/docs/how-to/modify-project#enable_billing_for_a_project) 
+[Enable billing for your project](https://console.cloud.google.com/billing/projects) 
+
+[Report bug/issue](https://github.com/streamprocessor/template-cloudrun/issues)
 
 
 ## 2. StreamProcessor alpha request form
@@ -53,16 +55,16 @@ mv ~/template-cloudrun ~/streamprocessor
 cd ~/streamprocessor/setup
 npm install
 curl -fsSL https://get.pulumi.com | sh
-
 ```
+
 ### 3.3 Configure Variables
 Replace variables with your own preferences (project and location). Then run the pulumi program and create a new stack. You can leave passphrase empty if you want to, the stack is only saved locally.
 
 ```bash
+pulumi stack init {{projectid}}-setup
 pulumi config set gcp:project {{project-id}}
 pulumi config set gcp:region europe-west1
 pulumi config set gcp:zone europe-west1-b
-pulumi stack init {{projectid}}-setup
 pulumi up
 ```
 
@@ -71,6 +73,8 @@ pulumi up
 [Check api status in GCP console](https://console.cloud.google.com/apis/dashboard?project={{project-id}})
 
 [Check IAM status in GCP console](https://console.cloud.google.com/iam-admin/iam?project={{project-id}})
+
+[Report bug/issue](https://github.com/streamprocessor/template-cloudrun/issues)
 
 ## 4. Set up shared infra
 
@@ -83,6 +87,8 @@ gcloud builds submit --config=cloudbuild.yaml .
 ```
 ---
 [Check build status in GCP console](https://console.cloud.google.com/cloud-build/builds?project={{project-id}})
+
+[Report bug/issue](https://github.com/streamprocessor/template-cloudrun/issues)
 
 ## 5. Deploy pipelines 
 Each pipeline has its own walkthrough. Change working directory to /pipelines and launch the walkthrough for the pipeline you want to deploy.
@@ -97,9 +103,14 @@ cd ../pipelines
 cloudshell launch-tutorial com.google.analytics.v1/walkthrough.md
 ```
 
+---
+[Report bug/issue](https://github.com/streamprocessor/template-cloudrun/issues)
+
 ## Congratulations
 
 <walkthrough-conclusion-trophy></walkthrough-conclusion-trophy>
 
 You’re all set and your StreamProcessor project is up and running!
 
+---
+[Report bug/issue](https://github.com/streamprocessor/template-cloudrun/issues)

@@ -31,7 +31,7 @@ StreamProcessor let you to create schemas with unlimited (10 000) custom dimensi
 Create an avro schema file by copying the template file (ua-xxxxx-y.avsc_) to an avro schema file (.avsc) with your propertyId as filename (ex. ua-12345-1.avsc).
 
 ```bash
-cp ua-xxxxx-y.avsc_ ua-12345-1.avsc
+cp ./com.google.analytics.v1/schemas/ua-xxxxx-y.avsc_ ./com.google.analytics.v1/schemas/ua-12345-1.avsc
 ```
 Open your new avro schema file (<walkthrough-cloud-shell-editor-icon></walkthrough-cloud-shell-editor-icon>) and delete or modify the example custom dimensions and metrics (exist on hit and product level) or add more. Remember that due to BigQuery limnitations, schema evolution only supports adding fields, not deleting them. 
 - *Alias* referes to the parameter containing the custom dimension/metric.
@@ -66,6 +66,8 @@ You also need to change the property reference in the namespace of the Entity re
     "type": "record",
     "fields": [...
 ```
+---
+[Report bug/issue](https://github.com/streamprocessor/template-cloudrun/issues)
 
 ## 3. Modify infrastructure program
 
@@ -76,6 +78,8 @@ const comGoogleAnalyticsV1EntityTransformerVersion = "latest";
 const bigQueryLocation = "EU";
 let properties = ["ua-xxxxx-y"]; //Array of comma separated property id:s
 ```
+---
+[Report bug/issue](https://github.com/streamprocessor/template-cloudrun/issues)
 
 ## 4. Add tracking script in Google Tag Manager
 Google Tag Manager (GTM) lets you add a Google Analytics (GA) custom task to copy the GA payload and send to StreamProcessor collector endpoint.
@@ -84,8 +88,14 @@ Google Tag Manager (GTM) lets you add a Google Analytics (GA) custom task to cop
 3. Set a field in the GA Settings variable (in GTM) with field name "customTask" and value { {customTask} }
 4. Create version and publish it in GTM
 
+---
+[Report bug/issue](https://github.com/streamprocessor/template-cloudrun/issues)
+
 ## Congratulations
 
 <walkthrough-conclusion-trophy></walkthrough-conclusion-trophy>
 
 You’re all set and your com.google.analytics.v1 pipeline is up and running!
+
+---
+[Report bug/issue](https://github.com/streamprocessor/template-cloudrun/issues)
