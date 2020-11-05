@@ -62,6 +62,7 @@ export PATH=$PATH:~/.pulumi/bin
 Replace variables with your own preferences (project and location). Then run the pulumi program and create a new stack. You can leave passphrase empty (just hit enter three times) if you want to, the stack is only saved locally. Select yes to perform the update.
 
 ```bash
+pulumi login --local
 pulumi stack init {{project-id}}-setup
 pulumi config set gcp:project {{project-id}}
 pulumi config set gcp:region europe-west1
