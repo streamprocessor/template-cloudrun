@@ -22,17 +22,15 @@ const loaderService = infra.getOutput("loaderService");
 
 const artifactRegistryHostname = `${region}-docker.pkg.dev`;
 
-/*
-******** START SETTINGS ********
-*/
+/********* START SETTINGS *********/
+
 const comGoogleAnalyticsV1EntityTransformerVersion = "latest";
 const bigQueryLocation = "EU";
 
-let properties = ["ua-xxxxx-y"]; //Array of comma separated property id:s
+//Array of comma separated property id:s
+let properties = ["ua-xxxxx-y"];
 
-/*
-******** END SETTINGS ********
-*/
+/********* END SETTINGS *********/
 
 function getServiceResponse(
     url: any = null,

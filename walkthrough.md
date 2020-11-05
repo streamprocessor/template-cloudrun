@@ -41,7 +41,7 @@ In order to run this guide you need a valid GCP project with billing enabled.
 ## 3. Setup API:s and IAM
 
 ### 3.1 Background
-This step runs locally and enables API:s, binds roles to service accounts, etc. and creates two resources:
+This step runs locally and enables API:s, binds roles to service accounts, etc. Pulumi will create two resource for you:
 1. streamprocessor service account: **streamprocessor@{{project-id}}.iam.gserviceaccount.com**
 2. a bucket to save state for the stacks: **gs://{{project-id}}-state**
 
@@ -55,13 +55,14 @@ mv ~/template-cloudrun ~/streamprocessor
 cd ~/streamprocessor/setup
 npm install
 curl -fsSL https://get.pulumi.com | sh
+export PATH=$PATH:~/.pulumi/bin
 ```
 
 ### 3.3 Configure Variables
-Replace variables with your own preferences (project and location). Then run the pulumi program and create a new stack. You can leave passphrase empty if you want to, the stack is only saved locally.
+Replace variables with your own preferences (project and location). Then run the pulumi program and create a new stack. You can leave passphrase empty (just hit enter three times) if you want to, the stack is only saved locally. Select yes to perform the update.
 
 ```bash
-pulumi stack init {{projectid}}-setup
+pulumi stack init {{project-id}}-setup
 pulumi config set gcp:project {{project-id}}
 pulumi config set gcp:region europe-west1
 pulumi config set gcp:zone europe-west1-b
