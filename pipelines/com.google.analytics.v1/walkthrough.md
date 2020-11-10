@@ -44,7 +44,7 @@ Open your new avro schema file (<walkthrough-cloud-shell-editor-icon></walkthrou
     "name" : "CustomDimensions",
     "namespace": "com.google.analytics.v1", 
     "type" : "record",
-    "isRegistrySubject" : "false", 
+    "isRegistryStream" : "false", 
     "fields" : [
       {
         "name" : "color",

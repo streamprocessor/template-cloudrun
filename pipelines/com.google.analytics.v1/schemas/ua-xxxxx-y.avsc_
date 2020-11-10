@@ -3,7 +3,7 @@
     "name" : "CustomDimensions",
     "namespace": "com.google.analytics.v1", 
     "type" : "record",
-    "isRegistrySubject" : "false", 
+    "isRegistryStream" : "false", 
     "fields" : [
       {
         "name" : "color",
@@ -16,7 +16,7 @@
   {
     "name" : "CustomMetrics",
     "namespace": "com.google.analytics.v1",
-    "isRegistrySubject" : "false", 
+    "isRegistryStream" : "false", 
     "type" : "record", 
     "fields" : [
       {
@@ -37,7 +37,7 @@
     "name" : "CustomDimensions",
     "namespace": "com.google.analytics.v1.ecommerce.product", 
     "type" : "record", 
-    "isRegistrySubject" : "false",
+    "isRegistryStream" : "false",
     "fields" : [
       {
         "name" : "color",
@@ -51,7 +51,7 @@
     "name" : "CustomMetrics",
     "namespace": "com.google.analytics.v1.ecommerce.product", 
     "type" : "record", 
-    "isRegistrySubject" : "false",
+    "isRegistryStream" : "false",
     "fields" : [
       {
         "name" : "amount",
@@ -71,7 +71,7 @@
     "name" : "ContentGroups",
     "namespace": "com.google.analytics.v1.content", 
     "type" : "record", 
-    "isRegistrySubject" : "false",
+    "isRegistryStream" : "false",
     "fields" : [
       {
         "name" : "group1", 
@@ -104,7 +104,7 @@
     "name" : "Content",
     "namespace" : "com.google.analytics.v1",
     "type" : "record", 
-    "isRegistrySubject" : "false",
+    "isRegistryStream" : "false",
     "fields" : [
       {
         "name" : "title", 
@@ -152,7 +152,7 @@
     "name": "Hit",
     "namespace": "com.google.analytics.v1",
     "type": "record",
-    "isRegistrySubject" : "false",
+    "isRegistryStream" : "false",
     "fields": [
       {
         "name" : "type", 
@@ -193,7 +193,7 @@
     "name" : "Browser",
     "namespace" : "com.google.analytics.v1.transformed.device",
     "type" : "record", 
-    "isRegistrySubject" : "false",
+    "isRegistryStream" : "false",
     "fields" : [
       {
         "name" : "flashVersion", 
@@ -211,7 +211,7 @@
     "name" : "Screen",
     "namespace" : "com.google.analytics.v1.device",
     "type" : "record", 
-    "isRegistrySubject" : "false",
+    "isRegistryStream" : "false",
     "fields" : [
       {
         "name" : "colors", 
@@ -229,7 +229,7 @@
     "name" : "Device", 
     "namespace" : "com.google.analytics.v1.transformed",
     "type" : "record", 
-    "isRegistrySubject" : "false",
+    "isRegistryStream" : "false",
     "fields" : [
       {
         "name" : "userAgent", 
@@ -252,7 +252,7 @@
     "name" : "Geo", 
     "namespace" : "com.google.analytics.v1",
     "type" : "record", 
-    "isRegistrySubject" : "false",
+    "isRegistryStream" : "false",
     "fields" : [
       {
         "name" : "country", 
@@ -290,7 +290,7 @@
     "name" : "Experiment", 
     "namespace" : "com.google.analytics.v1",
     "type" : "record", 
-    "isRegistrySubject" : "false",
+    "isRegistryStream" : "false",
     "fields" : [
       {
         "name" : "id", 
@@ -308,7 +308,7 @@
     "name" : "Exception", 
     "namespace" : "com.google.analytics.v1",
     "type" : "record", 
-    "isRegistrySubject" : "false",
+    "isRegistryStream" : "false",
     "fields" : [
       {
         "name" : "description", 
@@ -326,7 +326,7 @@
     "name" : "Timing", 
     "namespace" : "com.google.analytics.v1.latency",
     "type" : "record", 
-    "isRegistrySubject" : "false",
+    "isRegistryStream" : "false",
     "fields" : [
       {
         "name" : "category", 
@@ -354,7 +354,7 @@
     "name" : "Latency", 
     "namespace" : "com.google.analytics.v1",
     "type" : "record", 
-    "isRegistrySubject" : "false",
+    "isRegistryStream" : "false",
     "fields" : [
       {
         "name" : "timing", 
@@ -407,7 +407,7 @@
     "name" : "Social", 
     "namespace" : "com.google.analytics.v1",
     "type" : "record", 
-    "isRegistrySubject" : "false",
+    "isRegistryStream" : "false",
     "fields" : [
       {
         "name" : "network", 
@@ -430,7 +430,7 @@
     "name" : "App", 
     "namespace" : "com.google.analytics.v1",
     "type" : "record", 
-    "isRegistrySubject" : "false",
+    "isRegistryStream" : "false",
     "fields" : [
       {
         "name" : "name", 
@@ -458,7 +458,7 @@
     "name" : "Event", 
     "namespace" : "com.google.analytics.v1",
     "type" : "record", 
-    "isRegistrySubject" : "false",
+    "isRegistryStream" : "false",
     "fields" : [
       {
         "name" : "action", 
@@ -486,7 +486,7 @@
     "name" : "Product", 
     "namespace" : "com.google.analytics.v1.ecommerce",
     "type" : "record", 
-    "isRegistrySubject" : "false",
+    "isRegistryStream" : "false",
     "fields" : [
       {
         "name" : "sku", 
@@ -559,7 +559,7 @@
     "name" : "Promotion", 
     "namespace" : "com.google.analytics.v1.ecommerce",
     "type" : "record", 
-    "isRegistrySubject" : "false",
+    "isRegistryStream" : "false",
     "fields" : [
       {
         "name" : "id", 
@@ -592,7 +592,7 @@
     "name" : "Transaction", 
     "namespace" : "com.google.analytics.v1.ecommerce",
     "type" : "record", 
-    "isRegistrySubject" : "false",
+    "isRegistryStream" : "false",
     "fields" : [
       {
         "name" : "id", 
@@ -640,7 +640,7 @@
     "name" : "Checkout", 
     "namespace" : "com.google.analytics.v1.ecommerce",
     "type" : "record", 
-    "isRegistrySubject" : "false",
+    "isRegistryStream" : "false",
     "fields" : [
       {
         "name" : "step", 
@@ -658,7 +658,7 @@
     "name": "Ecommerce",
     "namespace": "com.google.analytics.v1",
     "type": "record",
-    "isRegistrySubject" : "false",
+    "isRegistryStream" : "false",
     "fields": [
       {
         "name" : "action", 

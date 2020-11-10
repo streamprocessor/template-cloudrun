@@ -6,7 +6,7 @@ steps:
     - '-c'
     - |
        gcloud secrets versions access latest --secret=pulumi-credentials --format='get(payload.data)' | tr '_-' '/+' | base64 -d > credentials.json
-- name: us-central1-docker.pkg.dev/streamprocessor-org/builder/pulumi-node:latest
+- name: us-central1-docker.pkg.dev/streamprocessor-org/builder/pulumi-node:${_BUILDER_VERSION}
   entrypoint: "bash"
   args:
     - '-c'
@@ -37,3 +37,4 @@ substitutions:
   _GOOGLE_ZONE: 'europe-west1-b'
   _GOOGLE_KEY_RING: 'streamprocessor'
   _GOOGLE_CRYPTO_KEY: 'pulumi'
+  _BUILDER_VERSION: '0.1.0'

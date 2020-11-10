@@ -15,10 +15,10 @@ const artifactRegistryHostname = `${region}-docker.pkg.dev`;
 ******** START SETTINGS ********
 */
 
-const collectorVersion = "0.0.1";
-const serializerVersion = "latest";
-const registratorVersion = "latest";
-const loaderVersion = "latest";
+const collectorVersion = "0.1.1";
+const serializerVersion = "0.1.2";
+const registratorVersion = "0.1.0";
+const loaderVersion = "0.1.1";
 
 /*
 ******** END SETTINGS ********
