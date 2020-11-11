@@ -15,7 +15,10 @@ const artifactRegistryHostname = `${region}-docker.pkg.dev`;
 ******** START SETTINGS ********
 */
 
-const collectorVersion = "0.1.1";
+const collectorVersion = "0.1.0";
+const collectorApiKeys = ""; //comma separated, ex. "123,456"
+const collectorAllowedOrigins = ""; //comma separated, ex. "https://www.streamprocessor.org"
+
 const serializerVersion = "0.1.2";
 const registratorVersion = "0.1.0";
 const loaderVersion = "0.1.1";
@@ -122,7 +125,76 @@ const processedTopic = new gcp.pubsub.Topic(
     }
 );
 
+const collectorService = new gcp.cloudrun.Service(
+    "collector-service",
+    {
+        location: `${region}`,
+        template: {
+            spec: {
+                serviceAccountName: serviceAccountName,
+                containers: [
+                    {
+                        envs: [
+                            {
+                                name: "TOPIC",
+                                value: collectedTopic["name"],
+                            },
+                            {
+                                name: "API_KEYS",
+                                value: collectorApiKeys,
+                            },
+                            {
+                                name: "ALLOW_ORIGINS",
+                                value: collectorAllowedOrigins,
+                            }
+                        ],
+                        image: `${artifactRegistryHostname}/streamprocessor-org/collector/cloud-run-node:${collectorVersion}`,
+                    }
+                ],
+            },
+            metadata: {
+                annotations: {
+                    "autoscaling.knative.dev/maxScale": "10"
+                },
+                labels: {
+                    program: "infra",
+                    stream: "all",
+                    component: "collector",
+                },
+            }
+        },
+        traffics: [
+            {
+                latestRevision: true,
+                percent: 100,
+            }
+        ],
+    },
+    { 
+        dependsOn: [
+            collectedTopic
+        ] 
+    }
+);
+
+const collectorServiceInvoker = new gcp.cloudrun.IamMember (
+    "collector-service-iam-public-invoker", 
+    {
+        project: collectorService.project,
+        region: collectorService.region,
+        service: collectorService.name,
+        role: "roles/run.invoker",
+        member: "allUsers",
+    }, 
+    { 
+        dependsOn: [
+            collectorService
+        ]
+    }
+);
+
 // Deploy collector on cloud functions and make public
+/*
 const collectorFunction = new gcp.cloudfunctions.Function(
     "collector", 
     {
@@ -168,6 +240,7 @@ const publicFunctionInvoker = new gcp.cloudfunctions.FunctionIamMember(
         dependsOn: collectorFunction 
     }
 );
+*/
 
 // Deploy registrator on cloud run. Modify max instances if needed (default 10).
 export const registryService = new gcp.cloudrun.Service(
