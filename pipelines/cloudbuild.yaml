@@ -15,7 +15,7 @@ steps:
        export GOOGLE_CREDENTIALS=$$(cat credentials.json)
        export GOOGLE_APPLICATION_CREDENTIALS=credentials.json
        export PULUMI_CONFIG_PASSPHRASE=""
-       pulumi login --cloud-url ${_STATE_BUCKET}
+       pulumi login --cloud-url gs://${PROJECT_ID}-state
        pulumi stack init ${_STACK} --secrets-provider="gcpkms://projects/${PROJECT_ID}/locations/global/keyRings/${_GOOGLE_KEY_RING}/cryptoKeys/${_GOOGLE_CRYPTO_KEY}"
        pulumi stack select ${_STACK}
        #pulumi stack ls
@@ -23,7 +23,7 @@ steps:
        pulumi config set gcp:project ${PROJECT_ID} --non-interactive 
        pulumi config set gcp:region ${_GOOGLE_REGION} --non-interactive 
        pulumi config set gcp:zone ${_GOOGLE_ZONE} --non-interactive 
-       pulumi config set serviceAccountName ${_SERVICE_ACCOUNT_NAME} --non-interactive 
+       pulumi config set serviceAccountName streamprocessor@${PROJECT_ID}.iam.gserviceaccount.com --non-interactive 
        pulumi preview --non-interactive
        pulumi stack export | pulumi stack import
        pulumi refresh --yes
@@ -33,11 +33,11 @@ steps:
        pulumi stack output --json
 tags: ['streamprocessor-builder']
 substitutions:
-  _STATE_BUCKET: gs://${PROJECT_ID}-state
+#  _STATE_BUCKET: gs://${PROJECT_ID}-state
   _STACK: 'default'
   _GOOGLE_REGION: 'europe-west1'
   _GOOGLE_ZONE: 'europe-west1-b'
   _GOOGLE_KEY_RING: 'streamprocessor'
   _GOOGLE_CRYPTO_KEY: 'pulumi'
-  _SERVICE_ACCOUNT_NAME: streamprocessor@${PROJECT_ID}-setup.iam.gserviceaccount.com
+#  _SERVICE_ACCOUNT_NAME: streamprocessor@${PROJECT_ID}-setup.iam.gserviceaccount.com
   _BUILDER_VERSION: '0.1.0'

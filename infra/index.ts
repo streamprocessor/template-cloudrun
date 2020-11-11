@@ -21,7 +21,7 @@ const collectorAllowedOrigins = ""; //comma separated, ex. "https://www.streampr
 
 const serializerVersion = "0.1.2";
 const registratorVersion = "0.1.0";
-const loaderVersion = "0.1.1";
+const loaderVersion = "0.1.2";
 
 /*
 ******** END SETTINGS ********
@@ -181,7 +181,7 @@ const collectorServiceInvoker = new gcp.cloudrun.IamMember (
     "collector-service-iam-public-invoker", 
     {
         project: collectorService.project,
-        region: collectorService.region,
+        location: collectorService.location,
         service: collectorService.name,
         role: "roles/run.invoker",
         member: "allUsers",
