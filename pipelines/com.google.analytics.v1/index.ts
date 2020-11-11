@@ -92,7 +92,7 @@ function postSchemasToRegistry(
 
 registryService["status"]["url"].apply(s => {
     console.log(s);
-    postSchemasToRegistry(s+'/subjects/versions' , null, '/schemas');
+    postSchemasToRegistry(s+'/streams/versions' , null, '/schemas');
 });
 
 const comGoogleAnalyticsV1EntityTransformerService = new gcp.cloudrun.Service(
@@ -138,7 +138,7 @@ const comGoogleAnalyticsV1EntityCollectedSubscription = new gcp.pubsub.Subscript
     {
         topic: collectedTopic["name"],
         ackDeadlineSeconds: 20,
-        filter: "hasPrefix(attributes.subject, \"com.google.analytics.v1\")",
+        filter: "hasPrefix(attributes.stream, \"com.google.analytics.v1\")",
         labels: {
             stream: "com-google-analytics-v1",
             component: "transformer",
@@ -195,7 +195,7 @@ for (let property of properties) {
 
     this[`${property}Schema`] = registryService["status"]["url"].apply(
         s => {
-            return pulumi.output(getServiceResponse(`${s}/subjects/com.google.analytics.v1.transformed.${property}.Entity/versions/latest/bigqueryschema` , null));
+            return pulumi.output(getServiceResponse(`${s}/streams/com.google.analytics.v1.transformed.${property}.Entity/versions/latest/bigqueryschema` , null));
         }
     );
     
@@ -227,7 +227,7 @@ for (let property of properties) {
         {
             topic: serializedTopic["name"],
             ackDeadlineSeconds: 20,
-            filter: `attributes.subject=\"com.google.analytics.v1.transformed.${property}.Entity\"`,
+            filter: `attributes.stream=\"com.google.analytics.v1.transformed.${property}.Entity\"`,
             labels: {
                 stream: "all",
                 component: "loader",
