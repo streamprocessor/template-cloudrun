@@ -24,7 +24,7 @@ const artifactRegistryHostname = `${region}-docker.pkg.dev`;
 
 /********* START SETTINGS *********/
 
-const comGoogleAnalyticsV1EntityTransformerVersion = "latest";
+const comGoogleAnalyticsV1EntityTransformerVersion = "0.1.2";
 const bigQueryLocation = "EU";
 
 //Array of comma separated property id:s
@@ -201,7 +201,7 @@ for (let property of properties) {
     
     this[`${property}Table`] = new gcp.bigquery.Table(`table-${property}`, {
         datasetId: comGoogleAnalyticsV1EntityDataset.datasetId,
-        tableId: property,
+        tableId: property.replace(/-/g, "_"),
         timePartitioning: {
             type: "DAY",
             field: "timestamp"

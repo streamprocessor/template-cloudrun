@@ -78,6 +78,13 @@ const comGoogleAnalyticsV1EntityTransformerVersion = "latest";
 const bigQueryLocation = "EU";
 let properties = ["ua-xxxxx-y"]; //Array of comma separated property id:s
 ```
+
+Then build your pipeline by executing
+
+```bash
+gcloud builds submit --config=cloudbuild.yaml ./com.google.analytics.v1 --substitutions=_STACK=com-google-analytics-v1
+```
+
 ---
 [Report bug/issue](https://github.com/streamprocessor/template-cloudrun/issues)
 
