@@ -384,3 +384,17 @@ const streamProcessorKmsCryptoKey = new gcp.kms.CryptoKey(
         ]
     }
 );
+
+const streamProcessorAppEngine = new gcp.appengine.Application(
+    "streamProcessorAppEngine",
+    {
+        databaseType: "CLOUD_FIRESTORE",
+        locationId: appEngineLocation
+    },
+    {
+        dependsOn:[
+            appengineApi,
+            firestoreApi
+        ]
+    }
+);
