@@ -8,8 +8,8 @@ This guide will show you how to setup your own StreamProcessor.
 Steps:
 
 1. Project and Billing
-2. StreamProcessor alpha request form
-3. Setup API:s and IAM
+2. Setup API:s and IAM
+3. StreamProcessor alpha request form
 4. Shared Infra
 5. Pipelines
 
@@ -33,19 +33,15 @@ In order to run this guide you need a valid GCP project with billing enabled.
 [Report bug/issue](https://github.com/streamprocessor/template-cloudrun/issues)
 
 
-## 2. StreamProcessor alpha request form
 
-[Fill in the alpha access request form](https://forms.gle/A9Xu3fV5kYs1j3KC7) to get permission to use the ready made docker images (the easiest way to get started).
+## 2. Setup API:s and IAM
 
-
-## 3. Setup API:s and IAM
-
-### 3.1 Background
+### 2.1 Background
 This step runs locally and enables API:s, binds roles to service accounts, etc. Pulumi will create two resource for you:
 1. streamprocessor service account: **streamprocessor@{{project-id}}.iam.gserviceaccount.com**
 2. a bucket to save state for the stacks: **gs://{{project-id}}-state**
 
-### 3.2 Pulumi
+### 2.2 Pulumi
 Rename the "template-cloudrun" folder (if you want to) and cd into the setup folder.
 Install dependencies required (npm) and install Pulumi (a modern infrastructure as code SDK).
 
@@ -58,7 +54,7 @@ curl -fsSL https://get.pulumi.com | sh
 export PATH=$PATH:~/.pulumi/bin
 ```
 
-### 3.3 Configure Variables
+### 2.3 Configure Variables
 Replace variables with your own preferences (project and location). Then run the pulumi program and create a new stack. You can leave passphrase empty (just hit enter three times) if you want to, the stack is only saved locally. Select yes to perform the update.
 
 ```bash
@@ -77,6 +73,10 @@ pulumi up
 [Check IAM status in GCP console](https://console.cloud.google.com/iam-admin/iam?project={{project-id}})
 
 [Report bug/issue](https://github.com/streamprocessor/template-cloudrun/issues)
+
+## 3. StreamProcessor alpha request form
+
+[Fill in the alpha access request form](https://forms.gle/A9Xu3fV5kYs1j3KC7) to get permission to use the ready made docker images (the easiest way to get started).
 
 ## 4. Set up shared infra
 
