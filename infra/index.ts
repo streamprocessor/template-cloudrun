@@ -15,7 +15,7 @@ const artifactRegistryHostname = `${region}-docker.pkg.dev`;
 ******** START SETTINGS ********
 */
 
-const collectorVersion = "0.1.0";
+const collectorVersion = "0.1.3";
 const collectorApiKeys = ""; //comma separated, ex. "123,456"
 const collectorAllowedOrigins = ""; //comma separated, ex. "https://www.streamprocessor.org"
 
