@@ -74,7 +74,7 @@ You also need to change the property reference in the namespace of the Entity re
 Open the index.ts file (<walkthrough-cloud-shell-editor-icon></walkthrough-cloud-shell-editor-icon>) and mody the settings.
 
 ```javascript
-const comGoogleAnalyticsV1EntityTransformerVersion = "latest";
+const comGoogleAnalyticsV1EntityTransformerVersion = "0.1.2"; // Choose the latest version available
 const bigQueryLocation = "EU";
 let properties = ["ua-xxxxx-y"]; //Array of comma separated property id:s
 ```
