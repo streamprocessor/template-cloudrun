@@ -19,7 +19,7 @@ const collectorVersion = "0.1.3";
 const collectorApiKeys = ""; //comma separated, ex. "123,456"
 const collectorAllowedOrigins = ""; //comma separated, ex. "https://www.streamprocessor.org"
 
-const serializerVersion = "0.1.2";
+const serializerVersion = "0.1.3";
 const registratorVersion = "0.1.0";
 const loaderVersion = "0.1.2";
 
