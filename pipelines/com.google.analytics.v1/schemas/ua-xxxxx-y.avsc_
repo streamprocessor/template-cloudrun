@@ -427,6 +427,104 @@
     ]
   },
   {
+    "name" : "TrafficSource", 
+    "namespace" : "com.google.analytics.v1.transformed",
+    "type" : "record", 
+    "isRegistryStream" : "false",
+    "fields" : [
+      {
+        "name" : "utmId", 
+        "type" : ["null", "string"],
+        "default" : null,
+        "doc": "(utm_id) used to import the Medium and Source offline with data import."
+      },
+      {
+        "name" : "utmContent", 
+        "type" : ["null", "string"],
+        "default" : null,
+        "doc": "(utm_content) Used to differentiate similar content, or links within the same ad."
+      },
+      {
+        "name" : "utmTerm", 
+        "type" : ["null", "string"],
+        "default" : null,
+        "doc": "(utm_terms) Identify paid search keywords."
+      },
+      {
+        "name" : "utmCampaign", 
+        "type" : ["null", "string"],
+        "default" : null,
+        "doc": "(utm_campaign) The individual campaign name, slogan, promo code, etc. for a product."
+      },
+      {
+        "name" : "utmMedium", 
+        "type" : ["null", "string"],
+        "default" : null,
+        "doc": "(utm_medium) The advertising or marketing medium."
+      },
+      {
+        "name" : "utmSource", 
+        "type" : ["null", "string"],
+        "default" : null,
+        "doc": "(utm_source) Identify the advertiser, site, publication, etc. that is sending traffic to your property."
+      },
+      {
+        "name" : "campaignId", 
+        "type" : ["null", "string"],
+        "default" : null,
+        "doc": "(ci) Specifies the campaign ID."
+      },
+      {
+        "name" : "campaignName", 
+        "type" : ["null", "string"],
+        "default" : null,
+        "doc": "(cn) Specifies the campaign name."
+      },
+      {
+        "name" : "campaignContent", 
+        "type" : ["null", "string"],
+        "default" : null,
+        "doc": "(cc) Specifies the campaign content."
+      },
+      {
+        "name" : "campaignMedium", 
+        "type" : ["null", "string"],
+        "default" : null,
+        "doc": "(cm) Specifies the campaign medium."
+      },
+      {
+        "name" : "campaignSource", 
+        "type" : ["null", "string"],
+        "default" : null,
+        "doc": "(cs) Specifies the campaign source."
+      },
+      {
+        "name" : "campaignKeyword", 
+        "type" : ["null", "string"],
+        "default" : null,
+        "doc": "(ck) Specifies the campaign keyword."
+      },
+      {
+        "name" : "gclid", 
+        "type" : ["null", "string"],
+        "default" : null,
+        "doc": "(gclid) Specifies the Google Ad Id."
+      },
+      {
+        "name" : "dclid", 
+        "type" : ["null", "string"],
+        "default" : null,
+        "doc": "(dclid) Specifies the Google Display Ads Id."
+      },
+      {
+        "name" : "referer", 
+        "type" : ["null", "string"],
+        "default" : null,
+        "doc" : " (dr) Specifies which referral source brought traffic to a website. This value is also used to compute the traffic source."
+      }
+    ]
+  },
+  {
     "name" : "App", 
     "namespace" : "com.google.analytics.v1",
     "type" : "record", 
@@ -758,6 +856,11 @@
       {
         "name" : "social", 
         "type" : ["null","com.google.analytics.v1.Social"],
+        "default" : null
+      },
+      {
+        "name" : "trafficSource", 
+        "type" : ["null","com.google.analytics.v1.transformed.TrafficSource"],
         "default" : null
       },
       {

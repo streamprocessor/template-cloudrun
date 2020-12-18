@@ -24,7 +24,7 @@ const artifactRegistryHostname = `${region}-docker.pkg.dev`;
 
 /********* START SETTINGS *********/
 
-const comGoogleAnalyticsV1EntityTransformerVersion = "0.1.2";
+const comGoogleAnalyticsV1EntityTransformerVersion = "0.1.5";
 const bigQueryLocation = "EU";
 
 //Array of comma separated property id:s
